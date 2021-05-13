@@ -50,8 +50,8 @@ namespace Chess
 
 		protected override bool CheckMove (string nextCoord)
 		{
-			CoordDiffs coordDiffs = new CoordDiffs( nextCoord, _currentCoord );
-			return coordDiffs.IsValidDirectMove();
+			FigureMove figureMove = new FigureMove( nextCoord, _currentCoord );
+			return figureMove.IsValidDirectMove();
 		}
 	}
 
@@ -62,8 +62,8 @@ namespace Chess
 		}
 		protected override bool CheckMove (string nextCoord)
 		{
-			CoordDiffs coordDiffs = new CoordDiffs( nextCoord, _currentCoord );
-			return coordDiffs.Dx == 1 && coordDiffs.Dy == 2 || coordDiffs.Dx == 2 && coordDiffs.Dy == 1;
+			FigureMove figureMove = new FigureMove( nextCoord, _currentCoord );
+			return figureMove.Dx == 1 && figureMove.Dy == 2 || figureMove.Dx == 2 && figureMove.Dy == 1;
 		}
 	}
 
@@ -74,8 +74,8 @@ namespace Chess
 		}
 		protected override bool CheckMove (string nextCoord)
 		{
-			CoordDiffs coordDiffs = new CoordDiffs( nextCoord, _currentCoord );
-			return coordDiffs.IsValidDiagonalMove();
+			FigureMove figureMove = new FigureMove( nextCoord, _currentCoord );
+			return figureMove.IsValidDiagonalMove();
 		}
 	}
 
@@ -86,8 +86,8 @@ namespace Chess
 		}
 		protected override bool CheckMove (string nextCoord)
 		{
-			CoordDiffs coordDiffs = new CoordDiffs( nextCoord, _currentCoord );
-			return coordDiffs.IsValidDiagonalMove() || coordDiffs.IsValidDirectMove();
+			FigureMove figureMove = new FigureMove( nextCoord, _currentCoord );
+			return figureMove.IsValidDiagonalMove() || figureMove.IsValidDirectMove();
 		}
 	}
 
@@ -98,8 +98,8 @@ namespace Chess
 		}
 		protected override bool CheckMove (string nextCoord)
 		{
-			CoordDiffs coordDiffs = new CoordDiffs( nextCoord, _currentCoord );
-			return coordDiffs.Dx <= 1 && coordDiffs.Dy <= 1;
+			FigureMove figureMove = new FigureMove( nextCoord, _currentCoord );
+			return figureMove.Dx <= 1 && figureMove.Dy <= 1;
 		}
 	}
 }

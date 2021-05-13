@@ -35,7 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ChessFigure.cs" />
-    <Compile Include="CoordDiffs.cs" />
+    <Compile Include="FigureMove.cs" />
     <Compile Include="TestClass.cs" />
   </ItemGroup>
   <ItemGroup>
