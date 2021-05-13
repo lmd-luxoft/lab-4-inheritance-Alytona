@@ -50,12 +50,8 @@ namespace Chess
 
 		protected override bool CheckMove (string nextCoord)
 		{
-			if (nextCoord[0] != _currentCoord[0] && nextCoord[1] != _currentCoord[1])
-				return false;
-			if (nextCoord[0] == _currentCoord[0] && nextCoord[1] == _currentCoord[1])
-				return false;
-
-			return true;
+			CoordDiffs coordDiffs = new CoordDiffs( nextCoord, _currentCoord );
+			return coordDiffs.IsValidDirectMove();
 		}
 	}
 
@@ -79,7 +75,7 @@ namespace Chess
 		protected override bool CheckMove (string nextCoord)
 		{
 			CoordDiffs coordDiffs = new CoordDiffs( nextCoord, _currentCoord );
-			return coordDiffs.Dx == coordDiffs.Dy;
+			return coordDiffs.IsValidDiagonalMove();
 		}
 	}
 
@@ -91,7 +87,7 @@ namespace Chess
 		protected override bool CheckMove (string nextCoord)
 		{
 			CoordDiffs coordDiffs = new CoordDiffs( nextCoord, _currentCoord );
-			return coordDiffs.Dx == coordDiffs.Dy || nextCoord[0] == _currentCoord[0] || nextCoord[1] == _currentCoord[1];
+			return coordDiffs.IsValidDiagonalMove() || coordDiffs.IsValidDirectMove();
 		}
 	}
 
@@ -103,7 +99,7 @@ namespace Chess
 		protected override bool CheckMove (string nextCoord)
 		{
 			CoordDiffs coordDiffs = new CoordDiffs( nextCoord, _currentCoord );
-			return (coordDiffs.Dx <= 1 && coordDiffs.Dy <= 1);
+			return coordDiffs.Dx <= 1 && coordDiffs.Dy <= 1;
 		}
 	}
 }
