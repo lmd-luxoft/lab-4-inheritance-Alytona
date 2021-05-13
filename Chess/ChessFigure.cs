@@ -18,14 +18,6 @@ namespace Chess
 		{
 			return coords[0] >= 'A' && coords[0] <= 'H' && coords[1] >= '1' && coords[1] <= '8';
 		}
-		protected static int GetDX (string coordsA, string coordsB)
-		{
-			return Math.Abs( coordsA[0] - coordsB[0] );
-		}
-		protected static int GetDY (string coordsA, string coordsB)
-		{
-			return Math.Abs( coordsA[1] - coordsB[1] );
-		}
 	}
 
 	class PawnFigure : ChessFigure
@@ -72,9 +64,8 @@ namespace Chess
 			if (!IsValidCoordinates( nextCoord ))
 				return false;
 
-			int dx = GetDX( nextCoord, currentCoord );
-			int dy = GetDY( nextCoord, currentCoord );
-			return dx == 1 && dy == 2 || dx == 2 && dy == 1;
+			CoordDiffs coordDiffs = new CoordDiffs( nextCoord, currentCoord );
+			return coordDiffs.Dx == 1 && coordDiffs.Dy == 2 || coordDiffs.Dx == 2 && coordDiffs.Dy == 1;
 		}
 	}
 	class BishopFigure : ChessFigure
@@ -87,9 +78,8 @@ namespace Chess
 			if (!IsValidCoordinates( nextCoord ))
 				return false;
 
-			int dx = GetDX( nextCoord, currentCoord );
-			int dy = GetDY( nextCoord, currentCoord );
-			return dx == dy;
+			CoordDiffs coordDiffs = new CoordDiffs( nextCoord, currentCoord );
+			return coordDiffs.Dx == coordDiffs.Dy;
 		}
 	}
 	class QueenFigure : ChessFigure
@@ -102,12 +92,8 @@ namespace Chess
 			if (!IsValidCoordinates( nextCoord ))
 				return false;
 
-			int dx = GetDX( nextCoord, currentCoord );
-			int dy = GetDY( nextCoord, currentCoord );
-			if (!(dx == dy || nextCoord[0] == currentCoord[0] || nextCoord[1] == currentCoord[1]))
-					return false;
-				else
-					return true;
+			CoordDiffs coordDiffs = new CoordDiffs( nextCoord, currentCoord );
+			return coordDiffs.Dx == coordDiffs.Dy || nextCoord[0] == currentCoord[0] || nextCoord[1] == currentCoord[1];
 		}
 	}
 	class KingFigure : ChessFigure
@@ -120,9 +106,8 @@ namespace Chess
 			if (!IsValidCoordinates( nextCoord ))
 				return false;
 
-			int dx = GetDX( nextCoord, currentCoord );
-			int dy = GetDY( nextCoord, currentCoord );
-			return (dx <= 1 && dy <= 1);
+			CoordDiffs coordDiffs = new CoordDiffs( nextCoord, currentCoord );
+			return (coordDiffs.Dx <= 1 && coordDiffs.Dy <= 1);
 		}
 	}
 }
