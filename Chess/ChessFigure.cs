@@ -115,7 +115,7 @@ namespace Chess
 		{
 			if (nextCoord[0] >= 'A' && nextCoord[0] <= 'H' && nextCoord[1] >= '1' && nextCoord[1] <= '8')
 			{
-				return (Math.Abs( nextCoord[0] - currentCoord[0] ) <= 1 && Math.Abs( nextCoord[1] - currentCoord[1] ) <= 1)
+				return (Math.Abs( nextCoord[0] - currentCoord[0] ) <= 1 && Math.Abs( nextCoord[1] - currentCoord[1] ) <= 1);
 			}
 			return false;
 		}
