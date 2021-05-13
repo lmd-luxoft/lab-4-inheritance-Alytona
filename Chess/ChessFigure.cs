@@ -3,105 +3,103 @@ using System;
 
 namespace Chess
 {
-    public class ChessFigure
+    public abstract class ChessFigure
     {
-        private Type type;
-        private string currentCoord;
+        protected string _currentCoord;
 
-        public ChessFigure(Type type, string currentCoord)
+		protected ChessFigure (string currentCoord)
         {
-            this.type = type;
-            this.currentCoord = currentCoord;
+            this._currentCoord = currentCoord;
         }
 
-        public enum Type
-        {
-            ROOK,
-            KNIGHT,
-            BISHOP,
-            PAWN,
-            KING,
-            QUEEN
-        }
-
-        internal bool Move(string nextCoord)
-        {
-			if (type == Type.PAWN)
-			{
-				if (nextCoord[0] >= 'A' && nextCoord[0] <= 'H' && nextCoord[1] >= '1' && nextCoord[1] <= '8')
-				{
-					if (nextCoord[0] != currentCoord[0] || nextCoord[1] <= currentCoord[1] || (nextCoord[1] - currentCoord[1] != 1 && (currentCoord[1] != '2' || nextCoord[1] != '4')))
-						return false;
-					else
-						return true;
-				}
-				else return false;
-
-			}
-
-			else if (type == Type.ROOK)
-			{
-				if (nextCoord[0] >= 'A' && nextCoord[0] <= 'H' && nextCoord[1] >= '1' && nextCoord[1] <= '8')
-				{
-					if ((nextCoord[0] != currentCoord[0]) && (nextCoord[1] != currentCoord[1]) || ((nextCoord[0] == currentCoord[0]) && (nextCoord[1] == currentCoord[1])))
-						return false;
-					else
-						return true;
-
-				}
-				else return false;
-			}
-			else if (type == Type.KNIGHT)
-			{
-				if (nextCoord[0] >= 'A' && nextCoord[0] <= 'H' && nextCoord[1] >= '1' && nextCoord[1] <= '8')
-				{
-					int dx, dy;
-					dx = Math.Abs(nextCoord[0] - currentCoord[0]);
-					dy = Math.Abs(nextCoord[1] - currentCoord[1]);
-					if (!(Math.Abs(nextCoord[0] - currentCoord[0]) == 1 && Math.Abs(nextCoord[1] - currentCoord[1]) == 2 || Math.Abs(nextCoord[0] - currentCoord[0]) == 2 && Math.Abs(nextCoord[1] - currentCoord[1]) == 1))
-						return false;
-					else
-						return true;
-				}
-				else return false;
-			}
-
-			else if (type == Type.BISHOP)
-			{
-				if (nextCoord[0] >= 'A' && nextCoord[0] <= 'H' && nextCoord[1] >= '1' && nextCoord[1] <= '8')
-				{
-					if (!(Math.Abs(nextCoord[0] - currentCoord[0]) == Math.Abs(nextCoord[1] - currentCoord[1])))
-						return false;
-					else
-						return true;
-				}
-				else return false;
-			}
-
-			else if (type == Type.KING)
-			{
-				if (nextCoord[0] >= 'A' && nextCoord[0] <= 'H' && nextCoord[1] >= '1' && nextCoord[1] <= '8')
-				{
-					if (!(Math.Abs(nextCoord[0] - currentCoord[0]) <= 1 && Math.Abs(nextCoord[1] - currentCoord[1]) <= 1))
-						return false;
-					else
-						return true;
-				}
-				else return false;
-			}
-			else if (type == Type.QUEEN)
-			{
-				if (nextCoord[0] >= 'A' && nextCoord[0] <= 'H' && nextCoord[1] >= '1' && nextCoord[1] <= '8')
-				{
-					if (!(Math.Abs(nextCoord[0] - currentCoord[0]) == Math.Abs(nextCoord[1] - currentCoord[1]) || nextCoord[0] == currentCoord[0] || nextCoord[1] == currentCoord[1]))
-						return false;
-					else
-						return true;
-				}
-				else return false;
-			}
-			else
+		internal bool Move (string nextCoord)
+		{
+			if (!IsValidCoordinates( nextCoord ))
 				return false;
+			return CheckMove( nextCoord );
 		}
-    }
+
+		protected abstract bool CheckMove (string nextCoord);
+
+		protected static bool IsValidCoordinates (string coords)
+		{
+			return coords[0] >= 'A' && coords[0] <= 'H' && coords[1] >= '1' && coords[1] <= '8';
+		}
+	}
+
+	class PawnFigure : ChessFigure
+	{
+		public PawnFigure (string currentCoord) : base( currentCoord )
+		{
+		}
+		protected override bool CheckMove (string nextCoord)
+		{
+			if (nextCoord[0] != _currentCoord[0] || nextCoord[1] <= _currentCoord[1])
+				return false;
+			if (nextCoord[1] - _currentCoord[1] != 1 && (_currentCoord[1] != '2' || nextCoord[1] != '4'))
+				return false;
+
+			return true;
+		}
+	}
+
+	class RookFigure : ChessFigure
+	{
+		public RookFigure (string currentCoord) : base( currentCoord ) { 
+		}
+
+		protected override bool CheckMove (string nextCoord)
+		{
+			FigureMove figureMove = new FigureMove( nextCoord, _currentCoord );
+			return figureMove.IsValidDirectMove();
+		}
+	}
+
+	class KnightFigure : ChessFigure
+	{
+		public KnightFigure (string currentCoord) : base( currentCoord )
+		{
+		}
+		protected override bool CheckMove (string nextCoord)
+		{
+			FigureMove figureMove = new FigureMove( nextCoord, _currentCoord );
+			return figureMove.Dx == 1 && figureMove.Dy == 2 || figureMove.Dx == 2 && figureMove.Dy == 1;
+		}
+	}
+
+	class BishopFigure : ChessFigure
+	{
+		public BishopFigure (string currentCoord) : base( currentCoord )
+		{
+		}
+		protected override bool CheckMove (string nextCoord)
+		{
+			FigureMove figureMove = new FigureMove( nextCoord, _currentCoord );
+			return figureMove.IsValidDiagonalMove();
+		}
+	}
+
+	class QueenFigure : ChessFigure
+	{
+		public QueenFigure (string currentCoord) : base( currentCoord )
+		{
+		}
+		protected override bool CheckMove (string nextCoord)
+		{
+			FigureMove figureMove = new FigureMove( nextCoord, _currentCoord );
+			return figureMove.IsValidDiagonalMove() || figureMove.IsValidDirectMove();
+		}
+	}
+
+	class KingFigure : ChessFigure
+	{
+		public KingFigure (string currentCoord) : base( currentCoord )
+		{
+		}
+		protected override bool CheckMove (string nextCoord)
+		{
+			FigureMove figureMove = new FigureMove( nextCoord, _currentCoord );
+			return figureMove.Dx <= 1 && figureMove.Dy <= 1;
+		}
+	}
 }
